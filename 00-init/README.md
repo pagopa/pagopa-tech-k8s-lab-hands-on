@@ -59,8 +59,18 @@ generate and run the container instance.
 
 As described in the image, the app descriptor define four different container on three different set, called **pod**: two 
 with single component and one with two co-located container that are not isolated each other. In the app descriptor is defined
-also the number o replicas for each pod that are needed to be run in parallel. After the submission of the app descriptor,
+also the number of replicas for each pod that are needed to be run in parallel. After the submission of the app descriptor,
 the Scheduler schedule the defined number of replicas for each pod on the available nodes and, then, the Kubelets on the
 nodes tells to the container runtime to get the needed image from image registry.  
 Once the application are running, Kubernetes makes sure that all the components are in a valid deploy state and that matches
 the defined information defined by the developer in the app descriptor.
+
+### TO-DO
+ - Add info about kubectl
+ - Add scripts for kubectl as high-level reference and add references to @Angelo's scripts 
+   - kubectl cluster-info
+   - aks|aws cluster creation
+   - kubectl get nodes
+   - kubectl run (and describe replication controller, take account od Figure 2.8)
+   - kubectl expose
+   - kubectl get services

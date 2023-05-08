@@ -59,8 +59,10 @@ spec:
       protocol: TCP
 ```
 
-## Pod and labels
-
-## Pod annotation
-
-## Namespace management
+### TO-DO
+ - kubectl commands:
+   - kubectl get pods
+   - kubectl describe pod
+ - Pod and labels
+ - Pod annotation
+ - Namespace management
