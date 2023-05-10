@@ -59,10 +59,122 @@ spec:
       protocol: TCP
 ```
 
-### TO-DO
- - kubectl commands:
-   - kubectl get pods
-   - kubectl describe pod
- - Pod and labels
- - Pod annotation
- - Namespace management
+## Interfacing with pods
+To create a pod starting from the descriptor, execute this command:  
+
+`$ kubectl create -f POD-NAME.yaml`  
+
+The same structure (with additional fields) can be retrieved after the pod creation with the command:  
+
+`$ kubectl get po POD-NAME -o EXT`  
+
+where `EXT` can be either *json* or *yaml*. For simply retrieve the list of pods, execute the command:  
+
+`$ kubectl get pods`  
+
+When is needed to talk directly with a specific pod without calling an exposed service, a port forwarding can be 
+configured on the pod. To do so, execute the command:  
+
+`$ kubectl port-forward POD-NAME MACHINE-LOCAL-PORT:POD-PORT`  
+
+where the `MACHINE-LOCAL-PORT` is the port that can be used in local environment to access the pod directly. Finally, 
+for destroying the generated pod:
+
+`$ kubectl delete po POD-NAME`
+
+Deleting the pod mean that all the containers located in this resource will be terminated with a `SIGTERM` signal. After
+the signal sending, Kubernetes waits a certain amount of seconds (30 by default) for shut it down *gracefully* and if
+it does not shut down in this timelapse, the process will be killed by `SIGKILL` signal.
+
+## Labelling resources
+In some cases, there can be multiple pods on a cluster, either totally different ones, from the same replica, with different 
+version and so on. In order to grouping them avoiding an incomprehensible mess, they can be tagged with **labels**.  
+A label is a Kubernetes feature that permits to organize all resources using a key-value pair attached to the sames.  
+The labels can be defined either in resource creation and in a dedicated update, without recreating the resource.  
+In order to create a label on the resource, a descriptor can be defined with the following fields:  
+```yaml
+apiVersion: v1               
+kind: resource               
+metadata:
+  name: pod-example-label    
+  labels:
+    key1: value1
+    key2: value2
+spec:
+  containers:
+    ...
+```
+The labels can be shown in the pod list with the command:  
+
+`$ kubectl get po -L label1,label2`
+
+Obviously, the label can be used also as search filters as well as organizing group. This functionality is called 
+**label selectors** and permits to select resource based on whether the resource:
+ - Contains/not contains a label with certain key
+ - Contains a label with certain pair key-value
+ - Contains a label with certain key an a value not equals to the one specified
+
+For doing so, it can be used the following commands:
+
+`$ kubectl get po -l label1=value1`
+`$ kubectl get po -l '!label1'`
+`$ kubectl get po -l label1 in (value1,value2)`
+
+## Annotations
+Kubernetes resources can have also **annotations**, i.e. a key-value pairs similar to pairs but that cannot holds 
+static information, so they cannot be used to group objects. The advantage made by annotation is that they can hold much
+larger information that can be used as a tool.  
+The annotation are used for adding descriptions for resources that can be visible to everyone that can access to cluster.
+For instance, a valid annotation can be the developer that created the resource.  
+In order to create an annotation on the resource, a descriptor can be defined with the following fields:
+```yaml
+apiVersion: v1               
+kind: resource               
+metadata:
+  name: pod-example-label    
+  annotations:
+    kubernetes.io/created-by: |
+      {"kind":"SerializedReference", "apiVersion":"v1", "reference":{"kind":"ReplicationController", ...
+spec:
+  containers:
+    ...
+```
+The annotation can be added on already generated resource with the command:
+
+`$ kubectl annotate pod POD-NAME VALUE-ANNOTATED=COMPLEX-VALUE`
+
+## Namespace for grouping
+It is possible to define a certain component in order to define a context on which the resource can be located and can
+be naturally grouped: this is called Kubernetes **namespace** (different from Linux namespace that are used to really isolate
+processes and resources). The namespace can be used in a variety of forms: for separating resources in a multi-tenant
+environment, separating a complex system in a more simple applicative context, defending resources from unwanted access 
+and so on.  
+But it is important to know that resource in different namespace does not mean necessarily that they cannot communicate
+each other. They are not isolated as real Linux namespaces and if they are not isolated from the network, they can be
+freely invocable and accessible by other resources.  
+For see all the used Kubernetes namespaces, the following command can be launched:
+
+`$ kubectl get ns`
+
+Using one of the listed namespaces, one or more pods located here can be viewed as follows:
+
+`$ kubectl get po --namespace NAMESPACE`
+
+As well as other resources, the namespace can be generated with dedicated descriptor:
+```yaml
+apiVersion: v1
+kind: Namespace                  (Descriptor of Namespace instance)
+metadata:
+  name: namespace-name           (Metadata)
+```
+The descriptor can be used for generating the resource passing as parameter to the command:
+
+`$ kubectl create -f NAMESPACE-NAME.yml`
+
+After the creation of the same namespace, the resource to be generated can be attached to the namespace:
+
+`$ kubectl create -f RESOURCE-NAME.yaml -n NAMESPACE-NAME`  
+
+For deleting the whole namespace with all the resources included in there:
+
+`kubectl delete ns NAMESPACE-NAME`
