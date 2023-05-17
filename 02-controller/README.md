@@ -57,8 +57,7 @@ the ReplicationController notices the missing pods and create a replacements for
  - that when a node fails, the cluster is flexible and will not lost pods 
  - that the horizontal scaling is easier than if applied by hand
 
-#### !! TODO merge image [Figure 4.1. When a node fails, only pods backed by a ReplicationController are recreated] 
-####    with image [Figure 4.4. If a pod disappears, the ReplicationController sees too few pods and creates a new replacement pod] !!
+![controller scaling](../static/02-controller-scaling.png)
 
 As described by the image, when the node goes down and two pods are destroyed, the ReplicationController will recreate the 
 *Pod1* pod because it is the one that must be handled by this resource. The *Pod2* pod will not be recreated and no one
@@ -66,14 +65,14 @@ notice this departure.
 So, a ReplicationController constantly monitors the list of running pods and make sure that the number is always the same.
 For doing so, it execute a so-called **reconciliation loop** that provide to handle the replicas.  
 
-#### !! TODO image [Figure 4.2. A ReplicationController’s reconciliation loop] !!
+![imgreconciliation loop](../static/02-controller-reconciliation-loop.png)
 
 A Replication controller is composed of three different parts:
  - **label selector**: define the pod *type* under the ReplicationController scope
  - **pod template**: defines the blueprint of the pods during replica re-creation 
  - **replica counter**: defines the number of replicas that must run in the cluster
 
-#### !! TODO image [Figure 4.3. The three key parts of a ReplicationController] !!
+![replication controller structure](../static/02-controller-structure.png)
 
 A simple structure of a descriptor can be the following:
 ```yaml
@@ -109,7 +108,7 @@ Finally, to delete a ReplicationController (and eventually cascading the deletio
 
 `$ kubectl delete rc RC-NAME --cascade=true`
 
-#### !! TODO image [Figure 4.7. Deleting a replication controller with --cascade=false leaves pods unmanaged] !!
+![controller-deletion](../static/02-controller-deletion.png)
 
 
 ## Label selector and scope
@@ -128,13 +127,13 @@ For adding the label to a pod, simply execute the command (appending `--overwrit
 Removing a pod from its current scope can be useful when specific actions must be executed on a certain pod. For example,
 it can be used in a debug session, when a pod starts behaving badly.
 
-#### !! TODO image [Figure 4.5. Removing a pod from the scope of a ReplicationController by changing its labels] !!
+![pod re-labelling](../static/02-controller-relabelling.png)
 
 At the same mode, a ReplicationController's template can be modified on-the-run. As defined before, the only pods affected
 will be the one constructed after the template change and the ones defined before will remain unmodified until their destruction.
 So, to modify the old pods, simply destroy them.
 
-#### !! TODO image [Figure 4.6. Changing a ReplicationController’s pod template only affects pods created afterward and has no effect on existing pods.] !!
+![controller change template](../static/02-controller-change-template.png)
 
 For executing an update on the template, execute the command:
 
@@ -217,10 +216,9 @@ and only pod for each node in the cluster, handling their lifecycle and providin
 node goes down, the DaemonSet will not provide the "migration" of the pod to another node. But, if a new node is deployed,
 the DaemonSet provide immediately the deploy of the pod in the new instance.  
 With such potentiality, the DaemonSet can provide the pods deploying also on a subset of nodes: for doing so, simply 
-define a label on the needed node and add a **node selector** on the descriptor.  
+define a label on the needed node and add a **node selector** on the descriptor.
 
-#### !! TODO merge image [Figure 4.8. DaemonSets run only a single pod replica on each node, whereas ReplicaSets scatter them around the whole cluster randomly] 
-####         with image [Figure 4.9. Using a DaemonSet with a node selector to deploy system pods only on certain nodes] !!
+![daemon set](../static/02-controller-daemonset.png)
 
 A simple structure of a descriptor can be the following:
 ```yaml
@@ -265,7 +263,7 @@ other nodes in the same way the ReplicaSet pods are defined. In the event of pro
 restart or not, sa configured in the descriptor.  This resource is useful when ad-hoc tasks must be executed on the pod, 
 such as data migration or other similar tasks.
 
-#### !! TODO image [Figure 4.10. Pods managed by Jobs are rescheduled until they finish successfully] !!
+![contorller jobs](../static/02-controller-jobs.png)
 
 A simple structure of a descriptor can be the following:
 ```yaml
