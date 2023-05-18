@@ -37,7 +37,9 @@ az aks create --node-count 2 \
               --name ${aks_name} \
               --resource-group ${aks_resource_group}
 
+# az aks get-credentials --name pagopa-lab-aks-cluster --resource-group pagopa-d-weu-dev-aks-lab-rg
 az aks get-credentials --name ${aks_name} --resource-group ${aks_resource_group}
 
+# kubectl config use-context pagopa-lab-aks-cluster
 kubectl config use-context "${aks_name}"
 kubectl get pods

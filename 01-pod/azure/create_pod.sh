@@ -63,7 +63,7 @@ echo "Opening a port with port forward from pod. You can try calling 'curl local
 counter=0
 max_retry=10
 CMD_CHECK="503"
-while (("$CMD_CHECK" != "200" && $counter != $max_retry))
+while (("$CMD_CHECK" != "200" && $counter < $max_retry))
 do
     counter=$((counter + 1))
     sleep 1
