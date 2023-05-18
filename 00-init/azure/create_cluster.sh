@@ -1,6 +1,6 @@
 ## 
 ##  usage example:
-##      sh init.sh westeurope pagopa-d-weu-dev-aks-lab-rg pagopa-lab-aks-cluster Standard_D2as_v5
+##      sh create_cluster.sh westeurope pagopa-d-weu-dev-aks-lab-rg pagopa-lab-aks-cluster Standard_D2as_v5
 ##
 
 subscription=DEV-pagoPA
