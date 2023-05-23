@@ -104,9 +104,13 @@ spec:
   containers:
     ...
 ```
-The labels can be shown in the pod list with the command:  
+A subset of all labels can be shown in the pod list with the command:  
 
 `$ kubectl get po -L label1,label2`
+
+Alternatively, the whole list of labels can be shown with the command:
+
+`$ kubectl get pods --show-labels`
 
 Obviously, the label can be used also as search filters as well as organizing group. This functionality is called 
 **label selectors** and permits to select resource based on whether the resource:
