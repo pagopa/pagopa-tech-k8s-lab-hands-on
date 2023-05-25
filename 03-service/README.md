@@ -19,7 +19,7 @@ As can be guessed, the Service works also as a *load-balancer* that permits to b
 pods, exposing a single stable IP address and port. The services uses the label selectors mechanism in order to grouping
 the pods, in the same way of the controllers.
 
-#### Figure 5.2. Label selectors determine which pods belong to the Service.
+![service structure](../static/03-service-structure.png)
 
 A simple structure of a descriptor can be the following:
 ```yaml
@@ -98,7 +98,7 @@ to the readiness probe result. If a pod reports that is not ready, it is removed
 if it become ready again. Unlike liveness probes, if a container fails the readiness check it won't be restarted again.
 So, fundamentally a readiness probe permits to make sure that the clients talks always only to healthy pods.
 
-#### Figure 5.11. A pod whose readiness probe fails is removed as an endpoint of a service.
+![readiness probe](../static/03-service-readiness-probe.png)
 
 ## What is an Endpoints
 There are cases on which a pod must access to an external service, outside the Kubernetes cluster. So, instead of having
@@ -133,7 +133,7 @@ needs to have the same name as the service and contains the list of target IP ad
 If a container or pod is created after the service creation, it will include the environment variables for the service
 and all connections towards this service will be load balanced by the Endpoints.
 
-#### Figure 5.4. Pods consuming a service with two external endpoints.
+![communication with external services](../static/03-service-external-services.png)
 
 It is possible to connect directly a set of pods to an external service defining the following descriptor for the service:
 
@@ -178,7 +178,7 @@ spec:
     label: value
 ```
 
-#### Figure 5.6. An external client connecting to a NodePort service either through Node 1 or 2
+![NodePort service](../static/03-service-nodeport.png)
 
 With a `LoadBalancer` service, the service is accessible through a dedicated load balancer, provisioned from the cloud 
 infrastructure on which the Kubernetes system is running on. The load balancer automatically redirects the requests to 
@@ -200,7 +200,7 @@ spec:
     label: value
 ```
 
-#### Figure 5.7. An external client connecting to a LoadBalancer service
+![LoadBalancer service](../static/03-service-loadbalancer.png)
 
 In order to avoiding unnecessary network hops, it is useful to set a configuration on which the service will redirect
 external traffic only to pods running on the node that receive the connection. For doing so, it can be useful to add the
@@ -209,7 +209,7 @@ port and the pod that receive the connection is not running on the same node. It
 balancer forwards the connection only to nodes that have at least one such pod. The drawbacks of this tag is that the 
 connection will not be disseminated across all the pods.
 
-#### Figure 5.8. A Service using the Local external traffic policy may lead to uneven load distribution across pods.
+![LoadBalancer service with local traffic policy](../static/03-service-loadbalancer-localtrafficpolicy.png)
 
 Each LoadBalancer service needs its own load balancer with its own public IP address for working well.
 
@@ -252,7 +252,7 @@ to find which service the client is trying to access, looking up the pod IPs thr
 with the same service. Then it forwards the client’s request to one of the deployed pods. So, the Ingress controller 
 didn't forward the request to the service but it will use the controller for selecting a pod.
 
-#### Figure 5.10. Accessing pods through an Ingress
+![Ingress service](../static/03-service-ingress.png)
 
 It is possible to enable the Ingress controller to encrypt communication through TLS: for doing so, it is needed to attach a 
 certificate and a private key to the same Ingress. These two resources must be stored in a Kubernetes resource called
