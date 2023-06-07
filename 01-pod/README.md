@@ -77,14 +77,21 @@ configured on the pod. To do so, execute the command:
 
 `$ kubectl port-forward POD-NAME MACHINE-LOCAL-PORT:POD-PORT`  
 
-where the `MACHINE-LOCAL-PORT` is the port that can be used in local environment to access the pod directly. Finally, 
-for destroying the generated pod:
+where the `MACHINE-LOCAL-PORT` is the port that can be used in local environment to access the pod directly.
+It is also possible to remotely run a command inside an existing pod. This can be useful when is needed to examine
+the pod status, environment or content. For doing so, execute the command:
+
+`$ kubectl exec POD-NAME -- COMMAND-TO-BE-EXECUTED`
+
+where `COMMAND-TO-BE-EXECUTED`, after the double dash, is the command that will be executed on the chosen pod. So, this
+can be a simple `curl` command or another more complex command flow. Finally, for destroying the generated pod:
 
 `$ kubectl delete po POD-NAME`
 
 Deleting the pod mean that all the containers located in this resource will be terminated with a `SIGTERM` signal. After
 the signal sending, Kubernetes waits a certain amount of seconds (30 by default) for shut it down *gracefully* and if
 it does not shut down in this timelapse, the process will be killed by `SIGKILL` signal.
+
 
 ## Labelling resources
 In some cases, there can be multiple pods on a cluster, either totally different ones, from the same replica, with different 
@@ -104,9 +111,13 @@ spec:
   containers:
     ...
 ```
-The labels can be shown in the pod list with the command:  
+A subset of all labels can be shown in the pod list with the command:  
 
 `$ kubectl get po -L label1,label2`
+
+Alternatively, the whole list of labels can be shown with the command:
+
+`$ kubectl get pods --show-labels`
 
 Obviously, the label can be used also as search filters as well as organizing group. This functionality is called 
 **label selectors** and permits to select resource based on whether the resource:

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: micronaut-pod
+  labels:
+    kind: web
+    target: dev
+spec:
+  containers:
+    - name: pagopapocmicronaut
+      image: pagopadcommonacr.azurecr.io/pagopapocmicronaut:latest
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 80
+          protocol: TCP
+  imagePullSecrets:
+    - name: acr-secret
+  nodeSelector:
+    kubernetes.io/os: linux
