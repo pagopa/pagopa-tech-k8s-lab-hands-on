@@ -7,7 +7,7 @@ of the process (for example if there is a OutOfMemory error), the JVM process ca
 In order to avoid this problematic, Kubernetes permits to check if a container is still alive and for doing this it uses
 the *liveness probes*. These probes are used to periodically querying the app and, if their execution fails or the 
 container will be restarted.  
-Kubernetes can define a probes using one of those mechanisms:
+Kubernetes can define a liveness probes using one of those mechanisms:
  - **HTTP GET**: in this case, the probe performs an HTTP GET request on the container address. If the probe receives a 
 response and the HTTP response  code does not represent an error state, its execution can be defined as successful. 
 If the probe receives an error HTTP response code, it tells the Kubelet to restarts the container. This probe will call
@@ -44,6 +44,32 @@ exceeds the defined threshold, the container is restarted again.
 For execute a restart operation, the Kubelet will first send a `SIGTERM` signal, with exit code 143, to gracefully terminate
 the application. If the application will not respond correctly, it will be sent a `SIGKILL` signal, defined with exit code
 137, that force the process kill.  
+There can be also another type of probe that permits to check if the pod is ready to accept requests or needs more time
+to execute a warm-up operation. This probe is called **readiness probe** and, as the name describe itself, is invoked
+periodically in order to determine if the pod should receive client request or not. If the probe returns success, the
+container is ready to accept requests. Obviously, the notion of being ready is something that’s specific to each container.  
+Kubernetes can define a readiness probes using one of those mechanisms, equally to the liveness probe:
+- **HTTP GET**
+- **TCP Socket**
+- **Exec**
+
+A simple structure of a descriptor can be the following:
+```yaml
+apiVersion: v1                  
+kind: Pod                       
+metadata:
+  name: pod-example-label       
+spec:
+  containers:
+    - image: image/name           
+      name: container-name        
+      readinessProbe:           
+        exec:                   
+          command:              
+          - ls                  
+          - /var/ready          
+```
+
 
 ## What is a controller?
 As described, the job of containers restarting is made entirely by the node on which the pod is located and the Kubernetes
