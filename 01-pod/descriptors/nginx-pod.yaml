@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: nginx-pod  
   labels:
-    kind: web
+    kind: reverse
     target: dev
 spec:
   containers:
