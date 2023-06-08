@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: nginx-pod  
   labels:
-    kind: web
+    kind: proxy
     target: dev
 spec:
   containers:
