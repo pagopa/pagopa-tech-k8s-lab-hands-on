@@ -48,9 +48,9 @@ Show all the labels in the pods
 
 `$ kubectl get pods --show-labels`
 
-List pods associated with a label named kind=reverse. You can use -l switch to apply filter based on labels.
+List pods associated with a label named kind=proxy. You can use `-l` switch to apply filter based on labels.
 
-`$ kubectl get pod -l kind=normal`
+`$ kubectl get pod -l kind=proxy`
 
 To show that it works as expected, run the command again, but change the value of label kind to `web`. Note that this time `kubectl` does not return any pods because there are no pods that match the label kind and `web` value.
 
